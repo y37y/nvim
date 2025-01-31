@@ -98,9 +98,13 @@ return {
       })
     end,
   },
-  { "chaozwn/angular-quickswitch.nvim", event = "VeryLazy", opts = {
-    use_default_keymaps = false,
-  } },
+  {
+    "chaozwn/angular-quickswitch.nvim",
+    event = "VeryLazy",
+    opts = {
+      use_default_keymaps = false,
+    },
+  },
   {
     "nvim-treesitter/nvim-treesitter",
     optional = true,

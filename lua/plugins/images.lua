@@ -1,6 +1,6 @@
 return {
   "3rd/image.nvim",
-  ft = { "markdown", "norg", "vimwiki" },
+  ft = { "markdown", "markdown.mdx", "norg", "vimwiki" },
   dependencies = {
     {
       "nvim-treesitter/nvim-treesitter",

@@ -148,14 +148,37 @@ return {
     end,
   },
   {
-    "mfussenegger/nvim-dap",
+    "leoluz/nvim-dap-go",
+    ft = "go", -- NOTE: ft: lazy-load on filetype
+    opts = {},
+  },
+  {
+    "saghen/blink.cmp",
     optional = true,
     dependencies = {
       {
-        "leoluz/nvim-dap-go",
-        opts = {},
+        "Snikimonkd/cmp-go-pkgs",
+        ft = "go",
+        enabled = vim.fn.executable "go" == 1,
       },
     },
+    opts = function(_, opts)
+      return require("astrocore").extend_tbl(opts, {
+        sources = {
+          compat = require("astrocore").list_insert_unique(opts.sources.compat or {}, { "go_pkgs" }),
+          providers = {
+            go_pkgs = {
+              kind = "Gopkgs",
+              score_offset = 100,
+              async = true,
+              enabled = function()
+                return vim.fn.executable "go" == 1 and require("cmp_go_pkgs")._check_if_inside_imports()
+              end,
+            },
+          },
+        },
+      })
+    end,
   },
   {
     "olexsmir/gopher.nvim",
@@ -177,7 +200,13 @@ return {
   {
     "nvim-neotest/neotest",
     optional = true,
-    dependencies = { "nvim-neotest/neotest-go" },
+    dependencies = {
+      {
+        "nvim-neotest/neotest-go",
+        ft = "go",
+        enabled = vim.fn.executable "go" == 1,
+      },
+    },
     opts = function(_, opts)
       if not opts.adapters then opts.adapters = {} end
       table.insert(opts.adapters, require "neotest-go"(require("astrocore").plugin_opts "neotest-go"))

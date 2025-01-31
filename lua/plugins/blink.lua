@@ -32,6 +32,13 @@ return {
   version = "*",
   dependencies = {
     { "rafamadriz/friendly-snippets", lazy = true },
+    -- add blink.compat to dependencies
+    {
+      "saghen/blink.compat",
+      opts = {},
+      lazy = true,
+      version = "*",
+    },
     "echasnovski/mini.icons",
   },
   opts_extend = {
@@ -45,7 +52,19 @@ return {
     },
     -- remember to enable your providers here
     sources = {
+      -- adding any nvim-cmp sources here will enable them
+      -- with blink.compat
+      compat = {},
       default = { "lsp", "path", "snippets", "buffer" },
+      cmdline = function()
+        local type = vim.fn.getcmdtype()
+        -- Search forward and backward
+        if type == "/" or type == "?" then return { "buffer" } end
+        -- Commands
+        if type == ":" or type == "@" then return { "cmdline" } end
+        return {}
+      end,
+      min_keyword_length = 0,
       providers = {
         lsp = {
           ---@type fun(ctx: blink.cmp.Context, items: blink.cmp.CompletionItem[])
@@ -144,6 +163,7 @@ return {
       },
     },
     completion = {
+      list = { selection = { preselect = true, auto_insert = false } },
       menu = {
         scrollbar = false,
         border = "rounded",
@@ -162,10 +182,12 @@ return {
                 return hl
               end,
             },
+            kind = {
+              ellipsis = true,
+            },
           },
         },
       },
-      -- Disable auto brackets
       -- NOTE: some LSPs may add auto brackets themselves anyway
       accept = {
         auto_brackets = { enabled = true },
@@ -239,7 +261,16 @@ return {
         local has_blink, blink = pcall(require, "blink.cmp")
         local capabilities =
           vim.tbl_deep_extend("force", {}, opts.capabilities or {}, has_blink and blink.get_lsp_capabilities() or {})
-        return require("astrocore").extend_tbl(opts, { capabilities = capabilities })
+        -- disable AstroLSP signature help if `blink.cmp` is providing it
+        local blink_opts = require("astrocore").plugin_opts "blink.cmp"
+        local signature_help = true
+        if vim.tbl_get(blink_opts, "signature", "enabled") == true then signature_help = false end
+        return require("astrocore").extend_tbl(
+          opts,
+          { capabilities = capabilities, features = {
+            signature_help = signature_help,
+          } }
+        )
       end,
     },
     {
@@ -266,7 +297,6 @@ return {
     },
     -- disable built in completion plugins
     { "hrsh7th/nvim-cmp", enabled = false },
-    { "rcarriga/cmp-dap", enabled = false },
     { "petertriho/cmp-git", enabled = false },
     { "L3MON4D3/LuaSnip", enabled = false },
     { "onsails/lspkind.nvim", enabled = false },
