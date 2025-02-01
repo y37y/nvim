@@ -1,17 +1,14 @@
 local M = {}
-local system = vim.loop.os_uname().sysname
 
 function M.core_mappings(mappings)
   if not mappings then mappings = require("astrocore").empty_map_table() end
-
-  local maps = mappings.core
+  local maps = mappings
   if maps then
     maps.n["<Leader>n"] = false
-    maps.n["<Leader>s"] = { desc = require("astroui").get_icon("GrugFar", 1, true) .. "Search" }
-    maps.v["<Leader>s"] = { desc = require("astroui").get_icon("GrugFar", 1, true) .. "Search" }
 
     maps.n.n = { require("utils").better_search "n", desc = "Next search" }
     maps.n.N = { require("utils").better_search "N", desc = "Previous search" }
+
     maps.v["K"] = { ":move '<-2<CR>gv-gv", desc = "Move line up", silent = true }
     maps.v["J"] = { ":move '>+1<CR>gv-gv", desc = "Move line down", silent = true }
 
@@ -28,14 +25,17 @@ function M.core_mappings(mappings)
     maps.v[">"] = { ">gv", desc = "Indent line" }
     maps.t["<Esc>"] = { [[<C-\><C-n>]], desc = "Exit terminal mode" }
 
-    -- Clipboard mappings with explicit +register
+    -- 在visual mode 里粘贴不要复制
+    maps.n["x"] = { '"_x', desc = "Cut without copy" }
+
+    -- Your custom clipboard mappings
     maps.v["<leader>y"] = { '"+y', desc = "Copy selected text to system clipboard" }
     maps.v["<leader>Y"] = { '"+Y', desc = "Copy selected line to system clipboard" }
     maps.n["<leader>y"] = { '"+y', desc = "Yank to system clipboard" }
     maps.n["<leader>Y"] = { '"+Y', desc = "Yank line to system clipboard" }
     maps.n["y"] = { '"+y', desc = "Copy to system clipboard" }
     maps.v["y"] = { '"+y', desc = "Copy to system clipboard" }
-    maps.n["<leader>yy"] = { 
+    maps.n["<leader>yy"] = {
       function()
         vim.cmd('normal! gg0vG$"+y')
         vim.notify("Yanked entire buffer to clipboard")
@@ -43,85 +43,49 @@ function M.core_mappings(mappings)
       desc = "Yank entire buffer to system clipboard"
     }
 
-    -- Buffer select mapping - improved version
+    -- Your buffer select mapping
     maps.n["<leader>a"] = {
       function()
-        -- Go to first character of first line and start visual mode
         vim.cmd("normal! gg0")
         vim.cmd("normal! v")
-        -- Go to last character of last line
         vim.cmd("normal! G$")
       end,
       desc = "Select entire buffer (first to last character)",
     }
 
-    -- Vertical diff mapping - improved version
+    -- Your vertical diff mapping
     maps.n["<leader>dv"] = {
       function()
-        -- Create new vertical split
         vim.cmd("vnew")
-        -- Paste from system clipboard
         vim.cmd('normal! "+P')
-        -- Enable diff mode for both windows
         vim.cmd("windo diffthis")
-        -- Optional: return to the new window
         vim.cmd("wincmd p")
       end,
       desc = "Vertical diff split with clipboard",
     }
 
-    -- Cut without copy in visual mode
-    maps.n["x"] = { '"_x', desc = "Cut without copy" }
-
     -- lsp restart
     maps.n["<Leader>lm"] = { "<Cmd>LspRestart<CR>", desc = "Lsp restart" }
     maps.n["<Leader>lg"] = { "<Cmd>LspLog<CR>", desc = "Show lsp log" }
 
-    -- macOS specific mappings
-    if system == "Darwin" then
-      maps.i["<D-s>"] = { "<esc>:w<cr>a", desc = "Save file", silent = true }
-      maps.x["<D-s>"] = { "<esc>:w<cr>a", desc = "Save file", silent = true }
-      maps.n["<D-s>"] = { "<Cmd>w<cr>", desc = "Save file", silent = true }
-    end
-
-    -- Enable Ctrl+hjkl navigation in debug/test mode
-    for _, mode in ipairs { "n", "i", "v" } do
-      maps[mode]["<C-h>"] = {
-        function() require("astrocore").move_selection "h" end,
-        desc = "Move to left screen",
-      }
-      maps[mode]["<C-j>"] = {
-        function() require("astrocore").move_selection "j" end,
-        desc = "Move to bottom screen",
-      }
-      maps[mode]["<C-k>"] = {
-        function() require("astrocore").move_selection "k" end,
-        desc = "Move to top screen",
-      }
-      maps[mode]["<C-l>"] = {
-        function() require("astrocore").move_selection "l" end,
-        desc = "Move to right screen",
-      }
-    end
-
     -- Lazy tools integration
     if vim.fn.executable "lazygit" == 1 then
       maps.n["<Leader>tl"] = {
-        function() require("utils").toggle_lazy_git() end,
+        require("utils").toggle_lazy_git(),
         desc = "ToggleTerm lazygit",
       }
     end
 
     if vim.fn.executable "lazydocker" == 1 then
       maps.n["<Leader>td"] = {
-        function() require("utils").toggle_lazy_docker() end,
+        require("utils").toggle_lazy_docker(),
         desc = "ToggleTerm lazydocker",
       }
     end
 
     if vim.fn.executable "btm" == 1 then
       maps.n["<Leader>tt"] = {
-        function() require("utils").toggle_btm() end,
+        require("utils").toggle_btm(),
         desc = "ToggleTerm btm",
       }
     end
@@ -133,7 +97,8 @@ function M.core_mappings(mappings)
     maps.n["<Leader>wo"] = { "<C-w>o", desc = "Close other screen" }
     maps.n["<Leader>we"] = { "<C-w>=", desc = "Equals All Window" }
   end
-  return mappings
+
+  return maps
 end
 
 function M.lsp_mappings(mappings)
@@ -143,7 +108,7 @@ function M.lsp_mappings(mappings)
     maps.n["gK"] = false
     maps.n["gk"] = maps.n["<Leader>lh"]
   end
-  return mappings
+  return maps
 end
 
 return M
