@@ -28,30 +28,44 @@ function M.core_mappings(mappings)
     maps.v[">"] = { ">gv", desc = "Indent line" }
     maps.t["<Esc>"] = { [[<C-\><C-n>]], desc = "Exit terminal mode" }
 
-    -- Clipboard mappings
+    -- Clipboard mappings with explicit +register
     maps.v["<leader>y"] = { '"+y', desc = "Copy selected text to system clipboard" }
     maps.v["<leader>Y"] = { '"+Y', desc = "Copy selected line to system clipboard" }
     maps.n["<leader>y"] = { '"+y', desc = "Yank to system clipboard" }
     maps.n["<leader>Y"] = { '"+Y', desc = "Yank line to system clipboard" }
     maps.n["y"] = { '"+y', desc = "Copy to system clipboard" }
     maps.v["y"] = { '"+y', desc = "Copy to system clipboard" }
-    maps.n["<leader>ya"] = { ":%y+<CR>", desc = "Yank entire buffer to system clipboard" }
-
-    -- Buffer select mapping
-    maps.n["<leader>a"] = {
+    maps.n["<leader>yy"] = { 
       function()
-        vim.cmd "normal! gg0"
-        vim.cmd "normal! vG$"
+        vim.cmd('normal! gg0vG$"+y')
+        vim.notify("Yanked entire buffer to clipboard")
       end,
-      desc = "Select entire buffer from start to end",
+      desc = "Yank entire buffer to system clipboard"
     }
 
-    -- Vertical diff mapping
+    -- Buffer select mapping - improved version
+    maps.n["<leader>a"] = {
+      function()
+        -- Go to first character of first line and start visual mode
+        vim.cmd("normal! gg0")
+        vim.cmd("normal! v")
+        -- Go to last character of last line
+        vim.cmd("normal! G$")
+      end,
+      desc = "Select entire buffer (first to last character)",
+    }
+
+    -- Vertical diff mapping - improved version
     maps.n["<leader>dv"] = {
       function()
-        vim.cmd "vnew"
-        vim.cmd 'normal! "+P'
-        vim.cmd "windo diffthis"
+        -- Create new vertical split
+        vim.cmd("vnew")
+        -- Paste from system clipboard
+        vim.cmd('normal! "+P')
+        -- Enable diff mode for both windows
+        vim.cmd("windo diffthis")
+        -- Optional: return to the new window
+        vim.cmd("wincmd p")
       end,
       desc = "Vertical diff split with clipboard",
     }
