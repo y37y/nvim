@@ -5,6 +5,8 @@ function M.core_mappings(mappings)
   local maps = mappings
   if maps then
     maps.n["<Leader>n"] = false
+    maps.n["<Leader>s"] = { desc = require("astroui").get_icon("GrugFar", 1, true) .. "Search" }
+    maps.v["<Leader>s"] = { desc = require("astroui").get_icon("GrugFar", 1, true) .. "Search" }
 
     maps.n.n = { require("utils").better_search "n", desc = "Next search" }
     maps.n.N = { require("utils").better_search "N", desc = "Previous search" }
@@ -68,18 +70,10 @@ function M.core_mappings(mappings)
     maps.n["<Leader>lm"] = { "<Cmd>LspRestart<CR>", desc = "Lsp restart" }
     maps.n["<Leader>lg"] = { "<Cmd>LspLog<CR>", desc = "Show lsp log" }
 
-    -- Lazy tools integration
     if vim.fn.executable "lazygit" == 1 then
       maps.n["<Leader>tl"] = {
-        require("utils").toggle_lazy_git(),
+        require("snacks.lazygit").open,
         desc = "ToggleTerm lazygit",
-      }
-    end
-
-    if vim.fn.executable "lazydocker" == 1 then
-      maps.n["<Leader>td"] = {
-        require("utils").toggle_lazy_docker(),
-        desc = "ToggleTerm lazydocker",
       }
     end
 
@@ -89,6 +83,10 @@ function M.core_mappings(mappings)
         desc = "ToggleTerm btm",
       }
     end
+
+    maps.n["<Leader>th"] = { require("snacks.terminal").toggle, desc = "ToggleTerm horizontal split" }
+    maps.n["<C-'>"] = { require("snacks.terminal").toggle, desc = "Toggle terminal" }
+    maps.t["<C-'>"] = { require("snacks.terminal").toggle, desc = "Toggle terminal" }
 
     -- window
     local get_icon = require("astroui").get_icon
