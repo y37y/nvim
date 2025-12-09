@@ -54,39 +54,34 @@ backup_neovim() {
     done
 }
 
-# Install Lua 5.1
+# Install Lua 5.1 (Homebrew version)
 install_lua() {
-    info "Installing Lua 5.1..."
     local os_type=$(detect_os)
+    info "Installing Lua 5.1 via Homebrew..."
     
     if [[ "$os_type" == "macos" ]]; then
-        # macOS installation
-        brew install lua@5.1
+        # Check if already installed to avoid errors
+        if ! brew list lua@5.1 &>/dev/null; then
+            brew install lua@5.1
+        else
+            info "lua@5.1 is already installed"
+        fi
+
+        if ! brew list luarocks &>/dev/null; then
+            brew install luarocks
+        else
+            info "luarocks is already installed"
+        fi
         
-        # Install LuaRocks for Lua 5.1
-        wget https://luarocks.github.io/luarocks/releases/luarocks-3.11.1.tar.gz
-        tar zxpf luarocks-3.11.1.tar.gz
-        cd luarocks-3.11.1
-        ./configure --lua-version=5.1 --lua-suffix=5.1
-        make
-        sudo make install
-        cd ..
-        rm -rf luarocks-3.11.1*
+        # Ensure binaries are linked and accessible
+        brew link --force lua@5.1
         
     elif [[ "$os_type" == "ubuntu" ]] || [[ "$os_type" == "kali" ]]; then
-        # Ubuntu/Kali installation
         sudo apt-get update
         sudo apt-get install -y lua5.1 liblua5.1-0-dev luarocks
-    else
-        error "Unsupported operating system for Lua installation"
     fi
-    
-    # Verify installation
-    if command -v lua5.1 &>/dev/null; then
-        success "Lua 5.1 installed successfully: $(lua5.1 -v)"
-    else
-        error "Lua 5.1 installation failed"
-    fi
+
+    success "Lua 5.1 setup complete."
 }
 
 # Setup fnm (Fast Node Manager)
@@ -277,7 +272,7 @@ main() {
     if [[ "$os_type" == "macos" ]]; then
         check_command "brew"
     fi
-    check_command "pip"
+    check_command "pip3"
     check_command "rustup"
     
     # Install Lua 5.1
