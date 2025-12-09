@@ -1,10 +1,9 @@
 # Neovim Configuration Management
 
-This Neovim configuration is based on chaozwn's AstroNvim setup with personal modifications. It is managed via Git and intended to be cloned directly into your configuration directory.
+This Neovim configuration is based on AstroNvim setup with personal modifications. It is managed via Git and intended to be cloned directly into your configuration directory.
 
 ## Repository Structure
 
-* **Upstream:** https://github.com/chaozwn/astronvim_user (remote name: upstream)
 * **Personal:** https://github.com/y37y/nvim.git (remote name: origin)
 
 ## Custom Key Mappings
@@ -71,29 +70,6 @@ This Neovim configuration is based on chaozwn's AstroNvim setup with personal mo
     git push origin main
     ```
 
-### Pulling Updates from Upstream
-
-1.  Navigate to the Neovim config directory:
-
-    ```bash
-    cd ~/.config/nvim
-    ```
-
-2.  Pull updates from the upstream repository:
-
-    ```bash
-    git fetch upstream
-    git merge upstream/astro_v4
-    ```
-
-3.  If there are conflicts, resolve them manually.
-
-4.  Push the merged updates to your personal repository:
-
-    ```bash
-    git push origin main
-    ```
-
 ### Applying Changes on a New Machine
 
 When setting up on a new machine:
@@ -109,15 +85,8 @@ When setting up on a new machine:
     ```bash
     cd ~/.config/nvim
     ```
-
-3.  **Set up git remotes:**
-
-    ```bash
-    # (Origin is already set by clone)
-    git remote add upstream [https://github.com/chaozwn/astronvim_user](https://github.com/chaozwn/astronvim_user)
-    ```
-
-4.  **Run the setup script:**
+    
+3.  **Run the setup script:**
 
     ```bash
     chmod +x setup.sh
