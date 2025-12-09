@@ -50,13 +50,11 @@ return {
     snippets = {
       expand = function(snippet, _) return require("utils").expand(snippet) end,
     },
-    -- remember to enable your providers here
-    sources = {
-      -- adding any nvim-cmp sources here will enable them
-      -- with blink.compat
-      compat = {},
-      default = { "lsp", "path", "snippets", "buffer" },
-      cmdline = function()
+    
+    -- FIXED: cmdline moved here (outside of sources)
+    cmdline = {
+      enabled = true,
+      sources = function()
         local type = vim.fn.getcmdtype()
         -- Search forward and backward
         if type == "/" or type == "?" then return { "buffer" } end
@@ -64,6 +62,13 @@ return {
         if type == ":" or type == "@" then return { "cmdline" } end
         return {}
       end,
+    },
+
+    -- sources configuration
+    sources = {
+      -- adding any nvim-cmp sources here will enable them with blink.compat
+      compat = {},
+      default = { "lsp", "path", "snippets", "buffer" },
       min_keyword_length = 0,
       providers = {
         lsp = {

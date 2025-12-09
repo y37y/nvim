@@ -4,7 +4,7 @@ local prefix = "<Leader>P"
 return {
   "yetone/avante.nvim",
   build = "make",
-  event = "User AstroFile",
+  event = "User AstroFile", -- Loads on startup
   cmd = {
     "AvanteAsk",
     "AvanteBuild",
@@ -16,8 +16,32 @@ return {
     "AvanteClear",
   },
   dependencies = {
-    { "nvim-lua/plenary.nvim", lazy = true },
-    { "MunifTanjim/nui.nvim", lazy = true },
+    "nvim-lua/plenary.nvim",
+    "MunifTanjim/nui.nvim",
+    -- FIX: Copilot moved here so it loads WITH Avante
+    {
+      "zbirenbaum/copilot.lua",
+      cmd = "Copilot",
+      event = "InsertEnter", 
+      -- We add a config function to ensure setup() runs immediately if Avante requests it
+      config = function()
+        require("copilot").setup({
+          suggestion = {
+            enabled = true,
+            auto_trigger = true,
+            debounce = 150,
+            keymap = {
+              accept = "<C-;>",
+              accept_word = false,
+              accept_line = false,
+              next = "<M-]>",
+              prev = "<M-[>",
+              dismiss = "<C-]>",
+            },
+          },
+        })
+      end,
+    },
   },
   opts = {
     provider = "copilot",
@@ -57,26 +81,6 @@ return {
         opts.mappings.n[prefix] = { desc = " Avante" }
         opts.options.opt.laststatus = 3
       end,
-    },
-    {
-      "zbirenbaum/copilot.lua",
-      cmd = "Copilot",
-      event = "InsertEnter",
-      opts = {
-        suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          debounce = 150,
-          keymap = {
-            accept = "<C-;>",
-            accept_word = false,
-            accept_line = false,
-            next = "<M-]>",
-            prev = "<M-[>",
-            dismiss = "<C-]>",
-          },
-        },
-      },
     },
     {
       "MeanderingProgrammer/render-markdown.nvim",
