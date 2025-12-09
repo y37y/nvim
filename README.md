@@ -1,10 +1,11 @@
 # Neovim Configuration Management
 
-This Neovim configuration is based on chaozwn's AstroNvim setup with personal modifications. It's managed using both Git and Chezmoi for dotfile management across multiple devices (Intel Mac, Apple Silicon Mac, and Ubuntu).
+This Neovim configuration is based on chaozwn's AstroNvim setup with personal modifications. It is managed via Git and intended to be cloned directly into your configuration directory.
 
 ## Repository Structure
 
-* Upstream: https://github.com/chaozwn/astronvim_user (remote name: upstream)
+* **Upstream:** https://github.com/chaozwn/astronvim_user (remote name: upstream)
+* **Personal:** https://github.com/y37y/nvim.git (remote name: origin)
 
 ## Custom Key Mappings
 
@@ -57,100 +58,79 @@ This Neovim configuration is based on chaozwn's AstroNvim setup with personal mo
 ### Making Changes
 
 1. Navigate to the Neovim config directory:
-   ```
-   cd ~/.local/share/chezmoi/dot_config/nvim
-   ```
-
-2. Make your desired changes to the configuration files.
-
-3. Commit and push changes to your personal repository:
    ```bash
-   git add .
-   git commit -m "Description of your changes"
-   git push origin
-   ```
+   cd ~/.config/nvim
 
-4. Update Chezmoi:
-   ```
-   cd ~/.local/share/chezmoi
-   git add dot_config/nvim
-   git commit -m "Update Neovim configuration in Chezmoi"
-   git push
-   ```
+2.  Make your desired changes to the configuration files.
 
-5. Apply the changes:
-   ```
-   chezmoi apply
-   ```
+3.  Commit and push changes to your personal repository:
+
+    ```bash
+    git add .
+    git commit -m "Description of your changes"
+    git push origin main
+    ```
 
 ### Pulling Updates from Upstream
 
-1. Navigate to the Neovim config directory:
-   ```
-   cd ~/.local/share/chezmoi/dot_config/nvim
-   ```
+1.  Navigate to the Neovim config directory:
 
-2. Pull updates from the upstream repository:
-   ```
-   git fetch upstream
-   git merge upstream/astro_v4
-   ```
+    ```bash
+    cd ~/.config/nvim
+    ```
 
-3. If there are conflicts, resolve them manually.
+2.  Pull updates from the upstream repository:
 
-4. After resolving conflicts (if any), commit and push to your personal repository:
-   ```bash
-   git add .
-   git commit -m "Merge upstream changes"
-   git push origin
-   ```
+    ```bash
+    git fetch upstream
+    git merge upstream/astro_v4
+    ```
 
-5. Update Chezmoi as described in steps 4 and 5 of "Making Changes".
+3.  If there are conflicts, resolve them manually.
+
+4.  Push the merged updates to your personal repository:
+
+    ```bash
+    git push origin main
+    ```
 
 ### Applying Changes on a New Machine
 
 When setting up on a new machine:
 
-1. Clone your Chezmoi repository:
-   ```
-   git clone https://github.com/y37y/nvim.git ~/.config/nvim
-   ```
+1.  **Clone the repository directly:**
 
-2. Apply Chezmoi changes:
-   ```
-   chezmoi apply
-   ```
+    ```bash
+    git clone [https://github.com/y37y/nvim.git](https://github.com/y37y/nvim.git) ~/.config/nvim
+    ```
 
-3. Navigate to the Neovim config directory:
-   ```
-   cd ~/.local/share/chezmoi/dot_config/nvim
-   ```
+2.  **Navigate to the directory:**
 
-4. Set up git remotes:
-   ```bash
-   git remote add origin git@github.com:y37y/nvim.git
-   git remote add upstream https://github.com/chaozwn/astronvim_user
-   ```
+    ```bash
+    cd ~/.config/nvim
+    ```
 
-5. Ensure all submodules and plugins are updated:
-   ```bash
-   git submodule update --init --recursive
-   ```
+3.  **Set up git remotes:**
 
-### Remember
+    ```bash
+    # (Origin is already set by clone)
+    git remote add upstream [https://github.com/chaozwn/astronvim_user](https://github.com/chaozwn/astronvim_user)
+    ```
 
-* Always make changes in ~/.local/share/chezmoi/dot_config/nvim, not directly in ~/.config/nvim
-* Keep your personal repository (origin), upstream, and Chezmoi all in sync by following this workflow
-* Regularly pull from upstream to stay updated with the latest changes from chaozwn's repository
-* After making changes, always run `chezmoi apply` to update your actual configuration files
+4.  **Run the setup script:**
 
----
+    ```bash
+    chmod +x setup.sh
+    ./setup.sh
+    ```
+
+-----
 
 # 🚀 AstroNvimV5 Configuration
 
-Welcome to my customized AstroNvimV5 configuration! This setup has been optimized for an efficient and powerful development workflow. Below, you'll find all the details on how to install, configure, and use this setup, along with some helpful tips and tricks.
+Welcome to my customized AstroNvimV5 configuration\! This setup has been optimized for an efficient and powerful development workflow.
 
----
+-----
 
 ## 🔧 Features
 
@@ -169,166 +149,97 @@ This configuration supports development in the following languages:
 | Go         | ✅             | ✅    |
 | Nextjs     | ✅             | ✅    |
 
-- **TypeScript**: `vtsls`.
-- **Vue**: `volar2`.
-- **React**: `vtsls`.
-- **Angular**: `angular server`.
-- **Node**: `vtsls`.
-- **Python**: `basedpyright`.
-- **Go**: `gopls`.
-- **Rust**: `rust-analyzer`.
-- **Markdown**: `markdown-preview.nvim`.
+  - **TypeScript**: `vtsls`.
+  - **Vue**: `volar2`.
+  - **React**: `vtsls`.
+  - **Angular**: `angular server`.
+  - **Node**: `vtsls`.
+  - **Python**: `basedpyright`.
+  - **Go**: `gopls`.
+  - **Rust**: `rust-analyzer`.
+  - **Markdown**: `markdown-preview.nvim`.
 
 ## Database Query
 
-- Support full syntax hints at query time, including database tables & table columns.
-- Supports a modern array of backends, including NoSQL databases:
-  - Big Query
-  - ClickHouse
-  - DuckDB
-  - Impala
-  - jq
-  - MongoDB
-  - MySQL
-  - MariaDB
-  - Oracle
-  - osquery
-  - PostgreSQL
-  - Presto
-  - Redis
-  - Snowflake
-  - SQL Server
-  - SQLite
-  - Your own easily implemented adapter
+  - Support full syntax hints at query time.
+  - Supports NoSQL and SQL backends (Big Query, ClickHouse, DuckDB, MongoDB, MySQL, PostgreSQL, Redis, SQLite, etc).
 
-![mysql_query](assets/imgs/mysql_query.png)
-
----
+-----
 
 ## 🛠️ Installation
 
-### 1. Install Lua 5.1
+### 1\. Automated Installation (Recommended)
 
-Neovim requires LuaJIT, so Lua 5.1 is currently the best version to use. [Why Neovim uses Lua 5.1](https://neovim.io/doc/user/lua.html).
-
-#### Install Luarocks
+Simply run the included setup script. It handles Lua, Node, Python, and Homebrew dependencies automatically.
 
 ```bash
-wget https://luarocks.github.io/luarocks/releases/luarocks-3.11.1.tar.gz
-tar zxpf luarocks-3.11.1.tar.gz
-cd luarocks-3.11.1
-
-./configure --lua-version=5.1 --lua-suffix=5.1
-make
-sudo make install
-
-luarocks --version
+chmod +x setup.sh
+./setup.sh
 ```
 
-#### Install Lua 5.1
+### 2\. Manual Installation Steps
+
+If you prefer to install manually, follow these steps:
+
+#### Install Lua 5.1 (via Homebrew)
+
+While Neovim uses its own internal LuaJIT, installing Lua 5.1 via Homebrew ensures compatibility for external tools and `luarocks` dependencies:
 
 ```bash
-wget https://www.lua.org/ftp/lua-5.1.5.tar.gz
-tar zxpf lua-5.1.5.tar.gz
-cd lua-5.1.5
-
-# For macOS
-make macosx
-
-make test
-sudo make install
-
-which lua
-lua -v
+brew install lua@5.1 luarocks
+brew link --force lua@5.1
 ```
 
-### 2. Ensure System Commands Are Available
-
-Make sure the following commands are installed on your system:
-
-- `npm`
-- `rustc`
-- `go`
-- `tmux`
-
-### 3. Install Dependencies
-
-Use `brew`, `npm`, and `pip` to install the necessary dependencies:
+#### Install System Dependencies
 
 ```bash
 # Homebrew packages
-brew install fzf fd lazygit ripgrep gdu bottom protobuf gnu-sed ast-grep lazydocker trash imagemagick chafa delta coreutils
+brew install fzf fd lazygit ripgrep gdu bottom protobuf gnu-sed ast-grep lazydocker trash imagemagick chafa delta coreutils pipx
 
 # Node.js packages
 npm install -g tree-sitter-cli neovim @styled/typescript-styled-plugin @monodon/typescript-nx-imports-plugin
 
-# Python packages, for render-markdown.nvim
-pip install pynvim pylatexenc
+# Python packages (using pip3/pipx)
+pip3 install --user pynvim pylatexenc
 ```
 
-### 4. Install AstroNvim
+#### Install AstroNvim
 
-Backup your existing Neovim configuration and clone the customized AstroNvim setup:
+Backup your existing Neovim configuration and clone this repo:
 
 ```bash
 mv ~/.config/nvim ~/.config/nvim.bak
-rm -rf ~/.local/share/nvim
-rm -rf ~/.local/state/nvim
-rm -rf ~/.cache/nvim
+rm -rf ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim
 
-# Clone the customized AstroNvim configuration
-git clone https://github.com/chaozwn/astronvim_with_coc_or_mason ~/.config/nvim
+# Clone configuration
+git clone [https://github.com/y37y/nvim.git](https://github.com/y37y/nvim.git) ~/.config/nvim
 ```
 
----
+-----
 
 ## 🖥️ Workflow Screenshots
 
-Here are some screenshots showcasing the workflow with `kitty`, `tmux`, `yazi`, and AstroNvim.
-
 ### Kitty + tmux + AstroNvim
-
-![homepage](assets/imgs/homepage.png)
-
-### Kitty
-
-![wezterm](assets/imgs/wezterm.png)
 
 ### tmux
 
-![tmux](assets/imgs/tmux.png)
-
-### yazi
-
-![yazi](assets/imgs/yazi.png)
-
----
-
-## 🔗 Other Configurations
-
-- **Kitty**: [https://github.com/chaozwn/kitty](https://github.com/chaozwn/kitty)
-- **tmux**: [https://github.com/chaozwn/tmux](https://github.com/chaozwn/tmux)
-- **yazi**: [https://github.com/chaozwn/yazi](https://github.com/chaozwn/yazi)
-
----
+-----
 
 ## 🦀 Rust Development Note
 
-When working with Rust, note that `rustup` and `mason` install `rust-analyzer` differently, which may cause some [bugs](https://github.com/rust-lang/rust-analyzer/issues/17289). Manual installation is recommended:
+When working with Rust, note that `rustup` and `mason` install `rust-analyzer` differently. Manual installation is recommended:
 
 ```bash
 rustup component add rust-analyzer
 ```
 
----
+-----
 
 ## 💡 Tips & Tricks
 
 ### Use Lazygit
 
 Trigger command: `<leader>tl`
-
-![lazygit](assets/imgs/lazygit.png)
 
 ### Install Bottom
 
@@ -338,146 +249,53 @@ Trigger command: `<Leader>tt`
 brew install bottom
 ```
 
-![bottom](assets/imgs/bottom.png)
-
-### Neovim Requirements
-
-Ensure Neovim dependencies are installed
-
-```bash
-# Install Neovim dependencies
-npm install -g neovim
-pip install pynvim
-```
-
 ### Markdown Image Paste
 
-To enable image pasting in Markdown files, install the `pngpaste` Python package:
+To enable image pasting in Markdown files:
 
 ```bash
 brew install pngpaste
 ```
 
-### Show Image in Neovim
+### Input Method Auto Switch (macOS)
 
-Add to `.zshrc` and `.bashrc`
-
-```bash
-export DYLD_FALLBACK_LIBRARY_PATH="$(brew --prefix)/lib:$DYLD_FALLBACK_LIBRARY_PATH"
-```
-
-### Input Method Auto Switch
+To automatically switch input methods (e.g., English in Normal mode) on macOS:
 
 ```bash
-brew install --cask squirrel
+brew tap daipeihust/tap
+brew install im-select
 ```
 
-modify `squirrel.custom.yaml`
-
-```yaml
-patch:
-  show_notifications_when: always # status notification，always open（always）always close（never）
-
-  # support auto switch in vim mode
-  app_options:
-    org.vim.MacVim:
-      no_inline: true
-      vim_mode: true
-    uk.foon.Neovim:
-      no_inline: true
-      vim_mode: true
-    com.qvacua.VimR:
-      no_inline: true
-      vim_mode: true
-    com.ident.goneovim:
-      no_inline: true
-      vim_mode: true
-    com.googlecode.iterm2:
-      no_inline: true
-      vim_mode: false
-    com.apple.Terminal:
-      no_inline: true
-      vim_mode: false
-    #com.apple.iWork.Numbers:
-    #no_inline: true
-    com.alfredapp.Alfred:
-      ascii_mode: true
-    com.jetbrains.intellij:
-      vim_mode: true
-    com.jetbrains.datagrip:
-      vim_mode: true
-    com.jetbrains.WebStorm:
-      vim_mode: true
-    # Obsidian
-    md.obsidian:
-      vim_mode: true
-    net.kovidgoyal.kitty:
-      vim_mode: true
-    # AntDraw in Edge
-    com.microsoft.edgemac.app.jndbnbljngolcchhjbajncidekccnlck:
-      no_inline: true
-    # AntDraw in Chrome
-    com.google.Chrome.app.jndbnbljngolcchhjbajncidekccnlck:
-      no_inline: true
-```
-
-### minial start
-
-```shell
-nvim -u /Users/jayce.zhao/.config/nvim/mini_astronvim.lua .
-```
-
----
+-----
 
 ## 🎛️ General Mappings
 
-Here are the general key mappings for this configuration:
-
 | Action                          | Keybinding          |
 | ------------------------------- | ------------------- |
-| **Leader key**                  | `Space`             |
-| **Resize up**                   | `Ctrl + Up`         |
-| **Resize down**                 | `Ctrl + Down`       |
-| **Resize left**                 | `Ctrl + Left`       |
-| **Resize right**                | `Ctrl + Right`      |
-| **Move to upper window**        | `Ctrl + k`          |
-| **Move to lower window**        | `Ctrl + j`          |
-| **Move to left window**         | `Ctrl + h`          |
-| **Move to right window**        | `Ctrl + l`          |
-| **Force write**                 | `Ctrl + s`          |
-| **Force quit**                  | `Ctrl + q`          |
-| **New file**                    | `Leader + n`        |
-| **Close buffer**                | `Leader + c`        |
-| **Next tab (real Vim tab)**     | `]t`                |
-| **Previous tab (real Vim tab)** | `[t`                |
-| **Toggle comment**              | `Leader + /`        |
-| **Horizontal split**            | `\`                 |
-| **Vertical split**              | <code>&#124;</code> |
+| **Leader key** | `Space`             |
+| **Resize up** | `Ctrl + Up`         |
+| **Resize down** | `Ctrl + Down`       |
+| **Resize left** | `Ctrl + Left`       |
+| **Resize right** | `Ctrl + Right`      |
+| **Move to upper window** | `Ctrl + k`          |
+| **Move to lower window** | `Ctrl + j`          |
+| **Move to left window** | `Ctrl + h`          |
+| **Move to right window** | `Ctrl + l`          |
+| **Force write** | `Ctrl + s`          |
+| **Force quit** | `Ctrl + q`          |
+| **New file** | `Leader + n`        |
+| **Close buffer** | `Leader + c`        |
+| **Next tab** | `]t`                |
+| **Previous tab** | `[t`                |
+| **Toggle comment** | `Leader + /`        |
+| **Horizontal split** | `\`                 |
+| **Vertical split** | \<code\>|\</code\> |
 
----
-
-## 📝 Notes
-
-### LSP Hover Information
-
-You can use `vim.lsp.buf.hover()` to display hover information about the symbol under the cursor in a floating window. Calling the function twice will jump into the floating window.
-
-- **Keybinding**: `KK`
-
-### Setting DAP Breakpoints
-
-To quickly set a DAP (Debug Adapter Protocol) breakpoint, use `<Ctrl-LeftClick>` on the line number.
-
----
+-----
 
 ## 🧑‍💻 Supported Neovim Version
 
 This configuration supports Neovim version `>= 0.10`.
 
----
+Happy coding\! 🚀
 
-Feel free to explore, customize, and enjoy this powerful Neovim setup! If you have any questions or encounter issues, don't hesitate to reach out.
-
-Happy coding! 🚀
-
----
